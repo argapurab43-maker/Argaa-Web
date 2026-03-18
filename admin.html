@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin</title>
+</head>
+<body>
+
+<h2>👑 Admin Panel</h2>
+
+<div id="list"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "APIKEY_KAMU",
+  authDomain: "argaa-web.firebaseapp.com",
+  projectId: "argaa-web",
+  storageBucket: "argaa-web.firebasestorage.app",
+  messagingSenderId: "85804841719",
+  appId: "APPID_KAMU"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+async function getRole(user) {
+  const ref = doc(db, "users", user.uid);
+  const snap = await getDoc(ref);
+  return snap.data().role;
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  let role = await getRole(user);
+
+  if (role !== "admin") {
+    alert("Bukan admin!");
+    window.location.href = "beranda.html";
+    return;
+  }
+
+  loadRequest();
+});
+
+async function loadRequest() {
+  let container = document.getElementById("list");
+  container.innerHTML = "";
+
+  const querySnapshot = await getDocs(collection(db, "penulis_request"));
+
+  querySnapshot.forEach((docSnap) => {
+    let data = docSnap.data();
+
+    let div = document.createElement("div");
+    div.innerHTML = `
+      <h3>${data.nama}</h3>
+      <p>${data.alasan}</p>
+      <button onclick="acc('${docSnap.id}', '${data.uid}')">ACC</button>
+      <hr>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+window.acc = async function(id, uid) {
+  await updateDoc(doc(db, "users", uid), {
+    role: "penulis"
+  });
+
+  alert("Berhasil jadi penulis ✍️");
+  location.reload();
+}
+</script>
+
+</body>
+</html>
