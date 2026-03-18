@@ -1,42 +1,35 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <title>Register</title>
-</head>
-<body>
-
-<h2>Register</h2>
-
-<input id="email" type="email" placeholder="Email"><br><br>
-<input id="password" type="password" placeholder="Password"><br><br>
-
-<button onclick="register()">Daftar</button>
-
-<p>Sudah punya akun? <a href="login.html">Login</a></p>
-
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCLu1POb4qzy6yqZ9gz6xHu4u_HlJ8BMMY",
-  authDomain: "argaa-web.firebaseapp.com",
-  projectId: "argaa-web",
-  storageBucket: "argaa-web.firebasestorage.app",
-  messagingSenderId: "85804841719",
-  appId: "1:85804841719:web:df2129e8586a445307f1f2"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyCLu1POb4qzy6yqZ9gz6xHu4u_HlJ8BMMY",
+    authDomain: "argaa-web.firebaseapp.com",
+    projectId: "argaa-web",
+    storageBucket: "argaa-web.firebasestorage.app",
+    messagingSenderId: "85804841719",
+    appId: "1:85804841719:web:df2129e8586a445307f1f2"
+  };
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const db = getFirestore(app);
 
   window.register = function() {
     let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
 
     createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
+      .then(async (userCredential) => {
+        const user = userCredential.user;
+
+        // 🔥 SIMPAN KE FIRESTORE
+        await setDoc(doc(db, "users", user.uid), {
+          email: email,
+          role: "member"
+        });
+
         alert("Berhasil daftar 🔥");
         window.location.href = "login.html";
       })
@@ -45,6 +38,3 @@ const firebaseConfig = {
       });
   }
 </script>
-
-</body>
-</html>
