@@ -1,69 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<title>Beranda</title>
+  <meta charset="UTF-8">
+  <title>Beranda</title>
 </head>
-<body>
+<body style="background:black; color:white;">
 
-<h2>🏠 Beranda</h2>
-<h3 id="userEmail"></h3>
+<!-- HEADER -->
+<div style="display:flex; justify-content:space-between; padding:10px;">
+  <div id="namaUser">👤 User</div>
+  <button onclick="logout()">Logout</button>
+</div>
 
-<br>
+<hr>
 
-<button onclick="keNovel()">📖 Novel</button>
-<button onclick="logout()">Logout</button>
+<h2 style="text-align:center;">Menu</h2>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+<div style="text-align:center;">
+  <button onclick="masukNovel()">📖 Novel</button>
+  <button onclick="masukGame()">🎮 Game</button>
+</div>
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCLu1POb4qzy6yqZ9gz6xHu4u_HlJ8BMMY",
-  authDomain: "argaa-web.firebaseapp.com",
-  projectId: "argaa-web",
-  storageBucket: "argaa-web.firebasestorage.app",
-  messagingSenderId: "85804841719",
-  appId: "1:85804841719:web:df2129e8586a445307f1f2"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+<!-- TOMBOL + -->
+<button id="btnTambah" onclick="tambahNovel()" 
+style="position:fixed; bottom:20px; right:20px; 
+background:blue; color:white; font-size:24px; border:none; border-radius:50%; width:50px; height:50px; display:none;">
++
+</button>
 
-async function getRole(user) {
-  const ref = doc(db, "users", user.uid);
-  const snap = await getDoc(ref);
-  return snap.data().role;
-}
+<script>
+  let email = localStorage.getItem("email");
+  let role = localStorage.getItem("role");
 
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.href = "login.html";
-    return;
-  }
+  // tampilkan nama
+  document.getElementById("namaUser").innerText = "👤 " + email;
 
-  let role = await getRole(user);
-
-  document.getElementById("userEmail").innerText =
-    user.email + " (" + role + ")";
-
+  // tampilkan tombol + hanya admin
   if (role === "admin") {
-    let btn = document.createElement("button");
-    btn.innerText = "Admin Panel";
-    btn.onclick = () => window.location.href = "admin.html";
-    document.body.appendChild(btn);
+    document.getElementById("btnTambah").style.display = "block";
   }
-});
 
-window.keNovel = function() {
-  window.location.href = "novel.html";
-}
+  function logout() {
+    localStorage.clear();
+    window.location.href = "index.html";
+  }
 
-window.logout = function() {
-  signOut(auth).then(() => {
-    window.location.href = "login.html";
-  });
-}
+  function masukNovel() {
+    window.location.href = "novel.html";
+  }
+
+  function masukGame() {
+    alert("Game belum dibuat 😅");
+  }
+
+  function tambahNovel() {
+    alert("Fitur tambah novel (next step 🔥)");
+  }
 </script>
 
 </body>
