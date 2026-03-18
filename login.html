@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<title>Login</title>
+  <meta charset="UTF-8">
+  <title>Login</title>
 </head>
 <body>
 
@@ -15,33 +16,45 @@
 <p>Belum punya akun? <a href="register.html">Register</a></p>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCLu1POb4qzy6yqZ9gz6xHu4u_HlJ8BMMY",
-  authDomain: "argaa-web.firebaseapp.com",
-  projectId: "argaa-web",
-  storageBucket: "argaa-web.firebasestorage.app",
-  messagingSenderId: "85804841719",
-  appId: "1:85804841719:web:df2129e8586a445307f1f2"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+  const firebaseConfig = {
+    apiKey: "AIzaSyCLu1POb4qzy6yqZ9gz6xHu4u_HlJ8BMMY",
+    authDomain: "argaa-web.firebaseapp.com",
+    projectId: "argaa-web",
+    storageBucket: "argaa-web.firebasestorage.app",
+    messagingSenderId: "85804841719",
+    appId: "1:85804841719:web:df2129e8586a445307f1f2"
+  };
 
-window.login = function() {
-  let email = document.getElementById("loginUser").value;
-  let password = document.getElementById("loginPass").value;
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Login berhasil 🔥");
-      window.location.href = "beranda.html";
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
-}
+  window.login = function() {
+    let email = document.getElementById("loginUser").value;
+    let password = document.getElementById("loginPass").value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        let emailUser = userCredential.user.email;
+
+        // 🔥 ADMIN MANUAL
+        if (emailUser === "emailkamu@gmail.com") {
+          localStorage.setItem("role", "admin");
+        } else {
+          localStorage.setItem("role", "member");
+        }
+
+        localStorage.setItem("email", emailUser);
+
+        alert("Login berhasil 🔥");
+        window.location.href = "beranda.html";
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  }
 </script>
 
 </body>
