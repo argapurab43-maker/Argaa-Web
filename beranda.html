@@ -1,48 +1,70 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Beranda</title>
+<title>Beranda</title>
 </head>
 <body>
 
-<h1>Selamat Datang 🎉</h1>
-<p id="userEmail">Loading...</p>
+<h2>🏠 Beranda</h2>
+<h3 id="userEmail"></h3>
 
+<br>
+
+<button onclick="keNovel()">📖 Novel</button>
 <button onclick="logout()">Logout</button>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCLu1POb4qzy6yqZ9gz6xHu4u_HlJ8BMMY",
-    authDomain: "argaa-web.firebaseapp.com",
-    projectId: "argaa-web",
-    storageBucket: "argaa-web.firebasestorage.app",
-    messagingSenderId: "85804841719",
-    appId: "1:85804841719:web:df2129e8586a445307f1f2"
-  };
+const firebaseConfig = {
+  apiKey: "APIKEY_KAMU",
+  authDomain: "argaa-web.firebaseapp.com",
+  projectId: "argaa-web",
+  storageBucket: "argaa-web.firebasestorage.app",
+  messagingSenderId: "85804841719",
+  appId: "APPID_KAMU"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-  // tunggu firebase siap
-  setTimeout(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById("userEmail").innerText = "Login sebagai: " + user.email;
-      } else {
-        window.location.href = "login.html";
-      }
-    });
-  }, 1000);
+async function getRole(user) {
+  const ref = doc(db, "users", user.uid);
+  const snap = await getDoc(ref);
+  return snap.data().role;
+}
 
-  window.logout = function() {
-    signOut(auth).then(() => {
-      window.location.href = "login.html";
-    });
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "login.html";
+    return;
   }
+
+  let role = await getRole(user);
+
+  document.getElementById("userEmail").innerText =
+    user.email + " (" + role + ")";
+
+  if (role === "admin") {
+    let btn = document.createElement("button");
+    btn.innerText = "Admin Panel";
+    btn.onclick = () => window.location.href = "admin.html";
+    document.body.appendChild(btn);
+  }
+});
+
+window.keNovel = function() {
+  window.location.href = "novel.html";
+}
+
+window.logout = function() {
+  signOut(auth).then(() => {
+    window.location.href = "login.html";
+  });
+}
 </script>
 
 </body>
