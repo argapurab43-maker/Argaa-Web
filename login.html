@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Login</title>
+<title>Login</title>
 </head>
 <body>
 
@@ -16,34 +15,34 @@
 <p>Belum punya akun? <a href="register.html">Register</a></p>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCLu1POb4qzy6yqZ9gz6xHu4u_HlJ8BMMY",
-    authDomain: "argaa-web.firebaseapp.com",
-    projectId: "argaa-web",
-    storageBucket: "argaa-web.firebasestorage.app",
-    messagingSenderId: "85804841719",
-    appId: "1:85804841719:web:df2129e8586a445307f1f2"
-  };
+const firebaseConfig = {
+  apiKey: "APIKEY_KAMU",
+  authDomain: "argaa-web.firebaseapp.com",
+  projectId: "argaa-web",
+  storageBucket: "argaa-web.firebasestorage.app",
+  messagingSenderId: "85804841719",
+  appId: "APPID_KAMU"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-  window.login = function() {
-    let email = document.getElementById("loginUser").value;
-    let password = document.getElementById("loginPass").value;
+window.login = function() {
+  let email = document.getElementById("loginUser").value;
+  let password = document.getElementById("loginPass").value;
 
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        alert("Login berhasil 🔥");
-        window.location.href = "beranda.html";
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-  }
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      alert("Login berhasil 🔥");
+      window.location.href = "beranda.html";
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+}
 </script>
 
 </body>
