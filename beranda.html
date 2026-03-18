@@ -3,44 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Beranda</title>
-
-  <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px;
-      background: #222;
-      color: white;
-    }
-
-    .menu {
-      margin-top: 50px;
-    }
-
-    .menu button {
-      padding: 15px 30px;
-      margin: 10px;
-      font-size: 18px;
-      cursor: pointer;
-    }
-  </style>
 </head>
 <body>
 
-<div class="topbar">
-  <span id="userEmail">Loading...</span>
-  <button onclick="logout()">Logout</button>
-</div>
+<h1>Selamat Datang 🎉</h1>
+<p id="userEmail">Loading...</p>
 
-<div class="menu">
-  <button onclick="goNovel()">📚 Novel</button>
-  <button onclick="goGame()">🎮 Game</button>
-</div>
+<button onclick="logout()">Logout</button>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
@@ -58,28 +27,22 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      document.getElementById("userEmail").innerText = user.email;
-    } else {
-      window.location.href = "login.html";
-    }
-  });
+  // tunggu firebase siap
+  setTimeout(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById("userEmail").innerText = "Login sebagai: " + user.email;
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+  }, 1000);
 
   window.logout = function() {
     signOut(auth).then(() => {
       window.location.href = "login.html";
     });
   }
-
-  window.goNovel = function() {
-    window.location.href = "novel.html";
-  }
-
-  window.goGame = function() {
-    window.location.href = "game.html";
-  }
-
 </script>
 
 </body>
