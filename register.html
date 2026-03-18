@@ -1,25 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+  <meta charset="UTF-8">
   <title>Register</title>
 </head>
-<body style="background:black; color:white; text-align:center;">
+<body>
 
-  <h1>📝 Register</h1>
+<h2>Register</h2>
 
-  <input type="text" placeholder="Username"><br><br>
-  <input type="password" placeholder="Password"><br><br>
+<input id="email" type="email" placeholder="Email"><br><br>
+<input id="password" type="password" placeholder="Password"><br><br>
 
-  <button onclick="daftar()">Daftar</button>
+<button onclick="register()">Daftar</button>
 
-  <br><br>
-  <a href="index.html">Kembali</a>
+<p>Sudah punya akun? <a href="login.html">Login</a></p>
 
-  <script>
-    function daftar() {
-      alert("Berhasil daftar! 🔥");
-    }
-  </script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCLu1POb4qzy6yqZ9gz6xHu4u_HlJ8BMMY",
+    authDomain: "argaa-web.firebaseapp.com",
+    projectId: "argaa-web",
+    storageBucket: "argaa-web.firebasestorage.app",
+    messagingSenderId: "85804841719",
+    appId: "1:85804841719:web:df2129e8586a445307f1f2"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  window.register = function() {
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        alert("Berhasil daftar 🔥");
+        window.location.href = "login.html";
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  }
+</script>
 
 </body>
 </html>
